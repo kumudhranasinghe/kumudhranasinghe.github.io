@@ -274,6 +274,16 @@ function initCarousel({ carousel, track, nav, autoAdvanceInterval = 5000, startD
         }
     }
 
+    const prevSlide = () => {
+        if (isTransitioning) return
+
+        currentIndex--
+        if (currentIndex < 0) {
+            currentIndex = cardCount - 1
+        }
+        goToSlide(currentIndex, true)
+    }
+
     const startAutoAdvance = () => {
         autoAdvanceTimer = setInterval(() => {
             if (!isPaused) nextSlide()
@@ -288,6 +298,36 @@ function initCarousel({ carousel, track, nav, autoAdvanceInterval = 5000, startD
     carousel.addEventListener('mouseleave', () => {
         isPaused = false
     })
+
+    // Touch/Swipe support for mobile
+    let touchStartX = 0
+    let touchEndX = 0
+    const minSwipeDistance = 50 // Minimum distance for a swipe
+
+    carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX
+        isPaused = true
+    }, { passive: true })
+
+    carousel.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX
+        handleSwipe()
+        isPaused = false
+    }, { passive: true })
+
+    const handleSwipe = () => {
+        const swipeDistance = touchEndX - touchStartX
+
+        if (Math.abs(swipeDistance) < minSwipeDistance) return
+
+        if (swipeDistance > 0) {
+            // Swiped right - go to previous
+            prevSlide()
+        } else {
+            // Swiped left - go to next
+            nextSlide()
+        }
+    }
 
     // Start auto-advance after delay
     setTimeout(startAutoAdvance, startDelay)
