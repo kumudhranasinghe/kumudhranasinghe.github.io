@@ -128,6 +128,21 @@
   gap: var(--space-3);
 }
 
+/* Disabled state for private repos */
+.project-main-link.disabled {
+  background: rgba(100, 100, 100, 0.15);
+  border-color: rgba(100, 100, 100, 0.3);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.project-main-link.disabled:hover {
+  background: rgba(100, 100, 100, 0.15);
+  border-color: rgba(100, 100, 100, 0.3);
+  gap: var(--space-2);
+}
+
 .project-main-link svg {
   width: 18px;
   height: 18px;

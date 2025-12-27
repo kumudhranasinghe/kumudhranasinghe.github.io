@@ -97,6 +97,7 @@ function initProjectCardEffects() {
             const description = thumb.dataset.description
             const stack = thumb.dataset.stack.split(',')
             const link = thumb.dataset.link
+            const isDisabled = link === 'disabled'
 
             // Smooth transition: fade out, update, fade in
             mainContent.classList.add('transitioning')
@@ -112,7 +113,37 @@ function initProjectCardEffects() {
                 if (mainDate) mainDate.textContent = date
                 if (mainTitle) mainTitle.textContent = title
                 if (mainDesc) mainDesc.textContent = description
-                if (mainLink) mainLink.href = link
+
+                // Update link based on disabled state
+                if (mainLink) {
+                    if (isDisabled) {
+                        // Create disabled span
+                        const disabledSpan = document.createElement('span')
+                        disabledSpan.className = 'project-main-link disabled'
+                        disabledSpan.innerHTML = `
+                            View Project
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        `
+                        mainLink.replaceWith(disabledSpan)
+                    } else {
+                        // Create active link
+                        const activeLink = document.createElement('a')
+                        activeLink.className = 'project-main-link'
+                        activeLink.href = link
+                        activeLink.target = '_blank'
+                        activeLink.innerHTML = `
+                            View Project
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        `
+                        mainLink.replaceWith(activeLink)
+                    }
+                }
 
                 // Update tech stack pills
                 if (mainStack) {
